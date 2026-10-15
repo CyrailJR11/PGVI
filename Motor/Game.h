@@ -11,6 +11,7 @@
 #include "EnemicTerrestre.h"
 #include "EnemicAeri.h"
 #include "GestorTextures.h"
+#include "EstatFacil.h"
 
 // ============================================================
 //  Motor - classe principal del joc
@@ -50,6 +51,9 @@ private:
     int   m_puntuacio        = 0;
     float m_tempsActual      = 0.0f;
     float m_tempsUltimEnemic = 0.0f;
+
+    // PATRO ESTATS: dificultat actual (Game n'es el propietari)
+    DificultatEstat* m_estat = nullptr;
 
     // Textos
     sf::Font m_fontTitol;

@@ -41,6 +41,7 @@ Game::Game()
     actualitzaTextPuntuacio();
 
     srand((unsigned int)time(nullptr));
+    m_estat = new EstatFacil();
 }
 
 // Regla d'or: per cada new, un delete. Game ha creat les bales i els enemics,
@@ -50,6 +51,7 @@ Game::~Game() {
         delete bala;
     for (Enemic* enemic : m_enemics)
         delete enemic;
+    delete m_estat;
 }
 
 // ------------------------------------------------------------
@@ -108,7 +110,7 @@ void Game::dispara() {
 void Game::generaEnemic() {
     int fila  = rand() % 3;                             // a quina altura surt
     int tipus = rand() % 2;                             // terrestre o aeri
-    float vel = Config::VELOCITAT_FACIL + fila * Config::INCREMENT_VELOCITAT_FILA * 0.5f;
+    float vel = m_estat->velocitat() + fila * Config::INCREMENT_VELOCITAT_FILA * 0.5f;
     sf::Vector2f pos = { Config::AMPLADA_FINESTRA + 60.0f,
                          Config::ALTURA_TERRA - Config::ALTURA_FILA_ENEMIC[fila] };
 
@@ -135,7 +137,7 @@ void Game::actualitzar(float dt) {
 
     // --- Enemics: apareixen cada cert temps i es mouen sols ---
     m_tempsActual += dt;
-    if (m_tempsActual >= m_tempsUltimEnemic + Config::INTERVAL_FACIL)
+    if (m_tempsActual >= m_tempsUltimEnemic + m_estat->interval())
         generaEnemic();
 
     for (Enemic* enemic : m_enemics)
@@ -184,6 +186,12 @@ void Game::actualitzar(float dt) {
         } else {
             ++i;
         }
+    }
+
+    // --- PATRO ESTATS: l'estat decideix si cal canviar de dificultat ---
+    if (DificultatEstat* nou = m_estat->seguent(m_puntuacio)) {
+        delete m_estat;
+        m_estat = nou;
     }
 
     actualitzaTextPuntuacio();
