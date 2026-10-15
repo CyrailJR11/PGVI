@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EstatFacil.cpp" />
     <ClCompile Include="Heroi.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="PDGV_motor.cpp" />
@@ -141,6 +142,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />
+    <ClInclude Include="DificultatEstat.h" />
+    <ClInclude Include="EstatFacil.h" />
     <ClInclude Include="GestorTextures.h" />
     <ClInclude Include="Heroi.h" />
     <ClInclude Include="Game.h" />
