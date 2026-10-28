@@ -1,4 +1,5 @@
 #include "EstatFacil.h"
+#include "EstatMitja.h"
 #include "Config.h"
 
 float EstatFacil::interval() const {
@@ -9,9 +10,12 @@ float EstatFacil::velocitat() const {
 	return Config::VELOCITAT_FACIL;
 }
 
+std::string EstatFacil::nom() const {
+	return "Facil";
+}
+
 DificultatEstat* EstatFacil::seguent(int punts) const {
-	/*if (punts >= Config::PUNTS_PER_PUJAR_NIVELL)
-		return new EstatMitja(); */
-	(void)punts;   // de moment no s'usa (fins que existeixi EstatMitja)
+	if (punts >= Config::PUNTS_PER_PUJAR_NIVELL)
+		return new EstatMitja();
 	return nullptr;
 }

@@ -1,25 +1,19 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include <string>
-#include "Config.h"
-#include "GestorTextures.h"
+#include "PlayableCharacter.h"
 
 // ============================================================
 //  Enemic.h - classe ABSTRACTA base de tots els enemics
-//  Cada fill decideix com es mou implementant update(dt).
-//  (Serveix de plantilla per a la classe Bala)
+//  Ara hereta de PlayableCharacter (punt 5): el sprite, la
+//  velocitat, draw() i getHitbox() venen de la classe base.
+//  update(dt) continua sent virtual pura: cada fill es mou diferent.
 // ============================================================
-class Enemic {
+class Enemic : public PlayableCharacter {
 public:
     Enemic(sf::Vector2f posicio, float velocitat, const std::string& textura);
-    virtual ~Enemic() = default;
 
-    virtual void update(float dt) = 0;        // polimorfisme: cada fill es mou diferent
-    void draw(sf::RenderWindow& finestra) const;
-    bool foraDePantalla() const;              // ha sortit per l'esquerra?
-    const sf::Sprite& getSprite() const { return m_sprite; }
+    void update(float dt) override = 0;           // polimorfisme (punt 5)
+    sf::FloatRect getHitbox() const override;     // una mica mes petita que el dibuix
 
-protected:
-    sf::Sprite m_sprite;
-    float m_velocitat = 0.0f;                 // negativa = cap a l'esquerra
+    // Ha sortit per l'esquerra de la camera?
+    bool foraDePantalla(float limitEsquerra) const;
 };

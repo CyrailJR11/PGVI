@@ -1,18 +1,22 @@
 #include "Enemic.h"
 
 Enemic::Enemic(sf::Vector2f posicio, float velocitat, const std::string& textura)
-    : m_sprite(GestorTextures::getInstance().get(textura)),
-      m_velocitat(velocitat)
+    : PlayableCharacter(textura, posicio)
 {
-    m_sprite.setOrigin(m_sprite.getLocalBounds().getCenter());   // origen al centre
-    m_sprite.setPosition(posicio);
+    m_velocitat.x = velocitat;   // negativa = cap a l'esquerra
 }
 
-void Enemic::draw(sf::RenderWindow& finestra) const {
-    finestra.draw(m_sprite);
+sf::FloatRect Enemic::getHitbox() const {
+    // 80% del sprite: el xoc es mes just
+    sf::FloatRect b = m_sprite.getGlobalBounds();
+    b.position.x += b.size.x * 0.1f;
+    b.position.y += b.size.y * 0.1f;
+    b.size.x *= 0.8f;
+    b.size.y *= 0.8f;
+    return b;
 }
 
-bool Enemic::foraDePantalla() const {
+bool Enemic::foraDePantalla(float limitEsquerra) const {
     // marge d'una amplada d'sprite: desapareix quan ja no es veu gens
-    return m_sprite.getPosition().x < -m_sprite.getGlobalBounds().size.x;
+    return m_sprite.getPosition().x < limitEsquerra - m_sprite.getGlobalBounds().size.x;
 }

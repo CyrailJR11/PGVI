@@ -5,5 +5,5 @@ EnemicTerrestre::EnemicTerrestre(sf::Vector2f posicio, float velocitat)
 }
 
 void EnemicTerrestre::update(float dt) {
-    m_sprite.move({ m_velocitat * dt, 0.0f });   // linia recta, velocitat negativa
+    m_sprite.move({ m_velocitat.x * dt, 0.0f });   // linia recta, velocitat negativa
 }
