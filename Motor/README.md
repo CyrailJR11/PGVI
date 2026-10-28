@@ -1,44 +1,92 @@
-# Motor — TinyBazooka (C++ / SFML 3)
+# Tiny Bazooka
 
-Juego 2D de acción lateral hecho en clase (C042 · Programació de videojocs 2D i 3D, La Salle Girona).
-El héroe salta con doble salto, dispara cohetes con la flecha abajo y los enemigos que toca una bala desaparecen y suman un punto.
+Juego de plataformas 2D desarrollado en C++ con SFML 3. Esquiva enemigos, salta entre plataformas y dispara cohetes para conseguir puntos. La partida termina cuando pierdes las tres vidas.
 
-![Captura del juego](docs/captura1.png)
+## Características
+
+- Movimiento lateral, salto y doble salto.
+- Tres tipos de enemigos: terrestres, aéreos y saltadores.
+- Disparo con un máximo de cinco cohetes simultáneos.
+- Niveles de dificultad fácil, media y difícil; la dificultad aumenta al conseguir puntos.
+- Mapa de plataformas con colisiones, agua y pinchos.
+- Cámara que sigue al jugador, fondos con parallax y música y efectos de sonido.
+- Medición integrada de rendimiento para comparar el dibujado optimizado del mapa.
 
 ## Controles
 
 | Tecla | Acción |
 |---|---|
-| ↑ | Saltar (doble salto) |
-| ↓ | Disparar (máximo 5 balas a la vez) |
-| Esc | Salir |
+| `↑` | Saltar; vuelve a pulsar en el aire para hacer un doble salto |
+| `←` / `→` | Moverse |
+| `↓` / `Espacio` | Disparar |
+| `P` | Pausar o reanudar la partida |
+| `Esc` | Volver al menú durante la partida |
+| `F2` | Activar o desactivar el límite de FPS |
+| `F4` | Cambiar entre el dibujado optimizado y el modo de comparación del mapa |
+| `F5` | Ejecutar la medición de rendimiento |
+| `F11` | Alternar entre pantalla completa y modo ventana |
+
+En el menú, usa `↑` y `↓` para elegir una opción; `Enter` o `Espacio` para aceptar; y `←` o `→` para cambiar la dificultad o el sonido. La opción **Controls / Tutorial** muestra las instrucciones dentro del juego.
+
+## Requisitos
+
+- Windows 10 u 11.
+- Visual Studio 2022 con la carga de trabajo **Desarrollo para el escritorio con C++**.
+- SFML 3 para Visual C++ 17 (MSVC 2022), de 64 bits.
+
+El proyecto está configurado para encontrar SFML en `C:\SFML64`. Si la instalas en otra ubicación, cambia las rutas de inclusión y de bibliotecas en las propiedades del proyecto. Usa una distribución de SFML compatible con MSVC 2022 y con la configuración que quieras ejecutar (`Debug` o `Release`).
+
+## Compilar y ejecutar
+
+1. Clona o descarga este repositorio.
+2. Abre `PDGV_motor.sln` con Visual Studio 2022.
+3. Selecciona la plataforma `x64` y la configuración `Debug` o `Release`.
+4. Compila la solución y ejecuta el proyecto con `F5`.
+
+Los recursos del juego se cargan desde rutas relativas como `Assets/graphics/` y `Assets/audio/`. Ejecuta el juego con la carpeta de este proyecto como directorio de trabajo para que encuentre las imágenes, fuentes, sonidos y el nivel. El proyecto incluye las DLL de SFML junto a los archivos del juego; al sustituirlas, asegúrate de que coincidan con la versión y configuración de la biblioteca usada para compilar.
 
 ## Estructura
 
-| Fichero | Qué hace |
+```text
+.
+├── Assets/
+│   ├── audio/       # Música y efectos
+│   ├── fonts/       # Fuentes de la interfaz
+│   ├── graphics/    # Personajes, enemigos, tiles y fondos
+│   └── levels/      # Definición del nivel
+├── PDGV_motor.sln
+├── PDGV_motor.vcxproj
+└── *.cpp / *.h      # Código fuente
+```
+
+### Componentes principales
+
+| Archivo | Responsabilidad |
 |---|---|
-| `Game.h/.cpp` | Motor del juego: bucle `run()` (entrada → `actualitzar(dt)` → `dibuixar()`), balas, enemigos, colisiones, marcador y sonido |
-| `Heroi.h/.cpp` | Héroe: gravedad, doble salto y animación por spritesheet |
-| `Bala.h/.cpp` | Proyectil: se mueve recto a la derecha y se borra al salir de pantalla o al tocar un enemigo |
-| `Enemic.h/.cpp` | Clase base abstracta de los enemigos |
-| `EnemicTerrestre.h/.cpp` | Enemigo que corre en línea recta por el suelo |
-| `EnemicAeri.h/.cpp` | Enemigo que vuela haciendo una onda (seno) |
-| `GestorTextures.h` | Patrón Singleton: carga cada textura una sola vez |
-| `Config.h` | Todas las constantes del juego |
-| `Assets/` | Imágenes, fuentes y sonidos |
+| `Game.h` / `Game.cpp` | Ventana, bucle principal, pantallas, cámara, entidades, colisiones y puntuación |
+| `Heroi.h` / `Heroi.cpp` | Movimiento, gravedad, doble salto, animación y daño del jugador |
+| `TileMap.h` / `TileMap.cpp` | Carga del nivel, colisiones con el terreno y dibujado del mapa |
+| `Bala.h` / `Bala.cpp` | Cohetes disparados por el jugador |
+| `Enemic*.h` / `Enemic*.cpp` | Clase base y variantes de enemigos |
+| `DificultatEstat.h` y `Estat*.cpp` | Estados de dificultad y progresión de la partida |
+| `Parallax.h` / `Parallax.cpp` | Fondos con movimiento parallax |
+| `Menu.*` y `Hud.*` | Menú, tutorial e información de la partida |
+| `GestorRecursos.h` | Carga y reutilización de fuentes y sonidos |
+| `Config.h` | Constantes, velocidades y rutas de los recursos |
 
-## Cómo compilar
+## Nivel
 
-1. Instala **SFML 3** (Visual C++ 17 2022, 64 bits) en `C:\SFML64`. Si lo tienes en otra carpeta, cambia la ruta en Propiedades › C/C++ › General y Vinculador › General.
-2. Abre `PDGV_motor.sln` con **Visual Studio 2022**.
-3. Selecciona la configuración **Debug** o **Release** y la plataforma **x64** (las configuraciones Win32 no tienen SFML configurado).
-4. Pulsa **F5**. Las DLL de SFML y la carpeta `Assets` ya están junto al proyecto.
+El nivel se define en `Assets/levels/nivell1.txt`. Cada carácter representa una casilla:
 
-## Detalles técnicos
+| Símbolo | Elemento |
+|---|---|
+| `.` | Espacio vacío |
+| `G`, `T`, `R` | Superficies sólidas |
+| `P` | Plataforma que se atraviesa desde abajo |
+| `A` | Agua peligrosa |
+| `S` | Pinchos peligrosos |
+| `H` | Posición inicial del jugador |
 
-- Todo el movimiento se multiplica por `dt`, así el juego va igual a cualquier FPS.
-- Las balas y los enemigos se guardan en `std::vector<T*>`; `Game` hace el `new` y también el `delete` (al salir de pantalla, al chocar y en el destructor).
-- Colisiones por cajas englobantes (AABB) con `getGlobalBounds().findIntersection()`.
-- Sonido con `sf::SoundBuffer` + `sf::Sound` (`fire.ogg` al disparar, `hit.ogg` al impactar).
+## Medición de rendimiento
 
-![Disparo en pleno salto y enemigo aéreo](docs/captura2.png)
+Pulsa `F5` durante la partida para ejecutar una prueba con una escena y una secuencia reproducibles. El resultado muestra FPS medios, FPS mínimos y tiempo medio por fotograma. `F4` cambia el modo de dibujado del mapa para comparar la versión optimizada con el modo anterior.
